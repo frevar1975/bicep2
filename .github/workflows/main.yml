@@ -1,4 +1,4 @@
-name: Azure ARM
+nname: Azure ARM
 
 on: [push]
 
@@ -10,18 +10,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # List files for debugging
+      - name: List files in workspace
+        run: ls -R /home/runner/work/${{ github.repository }}/
+
       # Log into Azure
       - name: Log into Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      # Validate Bicep file
+      - name: Validate Bicep file
+        run: az deployment group validate --resource-group bicep --template-file ./main.bicep
+
       # Deploy Bicep file
       - name: Deploy Bicep file
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: bicep # Nombre del grupo de recursos
+          resourceGroupName: bicep
           template: ./main.bicep
           parameters: |
             storagePrefix=stg
