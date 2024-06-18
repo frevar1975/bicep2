@@ -1,23 +1,28 @@
-on: [push]
 name: Azure ARM
+
+on: [push]
+
 jobs:
-    build-and-deploy:
-        runs-on: ubuntu-latest
-        steps:
-            # Checkout code
-            - uses: actions/checkout@main
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-              # Log into Azure
-            - uses: azure/login@v1
-              with:
-                  creds: ${{ secrets.AZURE_CREDENTIALS }}
+      # Log into Azure
+      - name: Log into Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-              # Deploy Bicep file
-            - name: deploy
-              uses: azure/arm-deploy@v1
-              with:
-                  subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-                  resourceGroupName: ${{ secrets.AZURE_RG }}
-                  template: ./main.bicep
-                  parameters: storagePrefix=stg
-                  failOnStdErr: false
+      # Deploy Bicep file
+      - name: Deploy Bicep file
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: bicep # Nombre del grupo de recursos
+          template: ./main.bicep
+          parameters: |
+            storagePrefix=stg
+          failOnStdErr: false
