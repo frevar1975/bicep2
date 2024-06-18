@@ -1,4 +1,3 @@
-
 on: [push]
 
 jobs:
@@ -11,7 +10,7 @@ jobs:
 
       # List files for debugging
       - name: List files in workspace
-   
+        run: ls -R /home/runner/work/${{ github.repository }}/
 
       # Log into Azure
       - name: Log into Azure
